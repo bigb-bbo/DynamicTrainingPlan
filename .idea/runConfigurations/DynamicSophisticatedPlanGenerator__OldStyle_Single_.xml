@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DynamicSophisticatedPlanGenerator (OldStyle-Single)" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="at.bigb.tennis.DynamicSophisticatedPlanGenerator" />
+    <option name="MAIN_CLASS_NAME" value="at.bigb.dynamicTrainingPlan_old.tennis.DynamicSophisticatedPlanGenerator" />
     <module name="DynamicTrainingPlan" />
     <option name="PROGRAM_PARAMETERS" value="S 4 26 12 12 C:\_boehm\bbo_single_generated.csv Boehm Kern!6 BrunhuemerAlex BrunhuemerAndi Leibetseder BrunhuemerS BurndorferB BurndorferF Siligan!9 Reischuetz AichlsederM AichlsederD Mayrleb Prugger!6 Sigmund!8 Binder Brandl Puehringer" />
     <method v="2">

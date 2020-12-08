@@ -1,4 +1,4 @@
-package at.bigb.dynamicTrainingPlan;
+package at.bigb.dynamicTrainingPlan_old;
 
 public class DoublesGame extends SinglesGame {
 

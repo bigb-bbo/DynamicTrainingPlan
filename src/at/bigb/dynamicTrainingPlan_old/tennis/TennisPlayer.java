@@ -1,4 +1,4 @@
-package at.bigb.tennis;
+package at.bigb.dynamicTrainingPlan_old.tennis;
 
 public class TennisPlayer implements Comparable<TennisPlayer> {
 
