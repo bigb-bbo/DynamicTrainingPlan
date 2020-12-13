@@ -6,10 +6,12 @@ package at.bigb.dynTrainPlan.dao;
 public class Player {
 
     private String name;
+    private int playerNumber = -1;
     private int playCounter = 0;
 
-    public Player(String name) {
+    public Player(String name, int playerNumber) {
         this.name = name;
+        this.playerNumber = playerNumber;
     }
 
     public String getName() {
@@ -28,5 +30,11 @@ public class Player {
         this.playCounter = playCounter;
     }
 
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
 
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
+    }
 }

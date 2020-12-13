@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayerTest {
 
     private static final int MAX_ROUNDS_OF_TRAINING = 26;
-    Player myPlayer = new Player("BBoTester");
+    Player myPlayer = new Player("BBoTester", 1);
 
     @BeforeAll
     void setUp() {

@@ -1,6 +1,7 @@
 package at.bigb.dynTrainPlan.dao;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -24,5 +25,9 @@ public class Round {
 
     public boolean validDoubleRound() {
         return players.size() == 4;
+    }
+
+    public void sortPlayersInRoundByNumber() {
+        this.players.sort(Comparator.comparingInt(Player::getPlayerNumber));
     }
 }

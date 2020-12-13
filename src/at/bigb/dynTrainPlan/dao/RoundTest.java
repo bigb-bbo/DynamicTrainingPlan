@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +28,8 @@ class RoundTest {
     }
 
     private void addPlayers(List<String> playerNames) {
-        playerNames.forEach(name -> myRound.getPlayers().add(new Player(name)));
+        AtomicInteger counter = new AtomicInteger(1);
+        playerNames.forEach(name -> myRound.getPlayers().add(new Player(name, counter.getAndIncrement())));
     }
 
     @Test

@@ -25,9 +25,9 @@ class DynamicTrainingPlanTest {
 
     @Test
     void checkValidDataForPlanCreation() {
-        String[] args = new String[] {"D", "2"};
+        String[] args = new String[] {"D", "2", "6", "C://_boehm//bbo_test.?", "Player1", "Player2"};
         assertFalse(trainingsPlan.checkValidDataForPlanCreation(args));
-        args = new String[] {"D", "2", "BigB"};
+        args = new String[] {"S", "1", "26", "C://_boehm//bbo_test.csv", "Player1", "Player2"};
         assertTrue(trainingsPlan.checkValidDataForPlanCreation(args));
     }
 
@@ -54,10 +54,10 @@ class DynamicTrainingPlanTest {
         List<Round> entries = new ArrayList<>();
         for(int i=0;i < 26;i++) {
             Round round = new Round();
-            Player player1 = new Player("Player1");
-            Player player2 = new Player("Player2");
-            Player player3 = new Player("Player3");
-            Player player4 = new Player("Player4");
+            Player player1 = new Player("Player1", 1);
+            Player player2 = new Player("Player2", 2);
+            Player player3 = new Player("Player3", 3);
+            Player player4 = new Player("Player4", 4);
             round.setPlayers(Arrays.asList(player1,player2,player3,player4));
             entries.add(round);
         }
@@ -69,5 +69,33 @@ class DynamicTrainingPlanTest {
     void validTrainingsPlanEntriesCreation() {
         this.createTrainingsPlanEntries();
         assertTrue(trainingsPlan.getTrainingsPlan().size() == 26);
+    }
+
+    @Test
+    void checkAllCombinationsCreated() {
+        // create args (frist 4 values are not relevant)
+        String[] args = new String[] {"", "", "", "", "Player1", "Player2"};
+        // two players should result in 1 possible combination
+        assertEquals(1, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+        // 3 players should result in 3 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3"};
+        assertEquals(3, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+        // 4 players should result in 6 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4"};
+        assertEquals(6, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+        // 5 players should result in 10 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5"};
+        assertEquals(10, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+        // 6 players should result in 15 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6"};
+        assertEquals(15, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+        // 8 players should result in 28 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
+                "Player7", "Player8"};
+        assertEquals(28, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+        // 10 players should result in 45 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
+                "Player7", "Player8", "Player9", "Player10"};
+        assertEquals(45, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
     }
 }
