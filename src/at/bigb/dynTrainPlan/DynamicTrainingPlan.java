@@ -49,7 +49,7 @@ public class DynamicTrainingPlan {
             System.out.println("not enough arguments provided at startup");
             return false;
         }
-        if (args[0] != "S" && args[0] != "D") {
+        if (!"S".equals(args[0]) && !"D".equals(args[0])) {
             System.out.println("first argument needs to be S or D");
             return false;
         }
