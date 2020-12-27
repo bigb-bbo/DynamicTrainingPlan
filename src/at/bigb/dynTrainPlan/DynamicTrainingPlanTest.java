@@ -14,6 +14,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * test class for dynamic training plan
+ * ATTENTION: for correct complete runs a directory "C:\_boehm" needs to exist
+ */
 class DynamicTrainingPlanTest {
 
     DynamicTrainingPlan trainingsPlan;
@@ -71,8 +75,7 @@ class DynamicTrainingPlanTest {
         assertTrue(trainingsPlan.getTrainingsPlan().size() == 26);
     }
 
-    @Test
-    void checkAllCombinationsCreated() {
+    private void doSingleGameTesting() {
         // create args (frist 4 values are not relevant)
         String[] args = new String[] {"", "", "", "", "Player1", "Player2"};
         // two players should result in 1 possible combination
@@ -97,5 +100,20 @@ class DynamicTrainingPlanTest {
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
                 "Player7", "Player8", "Player9", "Player10"};
         assertEquals(45, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
+    }
+
+    private void doDoubleGameTesting() {
+        // with less than 4 playes no round is possible
+        String[] args = new String[] {"", "", "", "", "Player1", "Player2", "Player3"};
+        assertEquals(0, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        // 4 players should result in 1 possible combination
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4"};
+        assertEquals(1, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+    }
+
+    @Test
+    void checkAllCombinationsCreated() {
+        doSingleGameTesting();
+        doDoubleGameTesting();
     }
 }

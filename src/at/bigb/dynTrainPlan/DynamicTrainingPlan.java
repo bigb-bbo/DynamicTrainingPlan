@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * creates a dynamic training plan for single or double matches depending on start parameters
@@ -33,14 +34,21 @@ public class DynamicTrainingPlan {
             return;
         }
         boolean isSingleGame = "S".equals(args[0]);
+        int noOfCourtsToFill = Integer.parseInt(args[1]);
+        int noOfRoundsToPlay = Integer.parseInt(args[2]);
         String fileName = args[3];
         // create ALL possible round combinations (depending on number of players)
         List<Round> allPossibleRoundCombinations = createAllPossibleRoundCombinations(isSingleGame, args);
-
         // optimize rounds, meaning least possible number of equal pairings and fewest possible rounds to pause
-
+        trainingsPlan = getOptimizedTrainingsPlan(allPossibleRoundCombinations, isSingleGame, noOfCourtsToFill, noOfRoundsToPlay);
         // last step, create the trainingsPlan file
         buildAndWriteCsvFile(fileName);
+    }
+
+    private static List<Round> getOptimizedTrainingsPlan(List<Round> allCombinations, boolean isSingleGame, int noOfCourtsToFill, int noOfRoundsToPlay) {
+        List<Round> finalTrainingsPlan = new ArrayList<>();
+
+        return finalTrainingsPlan;
     }
 
     public static boolean checkValidDataForPlanCreation(String[] args) {
@@ -78,10 +86,12 @@ public class DynamicTrainingPlan {
     public static List<Round> createAllPossibleRoundCombinations(boolean isSingleGame, String[] args) {
         List<Round> allCombinations = new ArrayList<>();
         List<Player> allPlayers = new ArrayList<>();
+        // find all available players from incoming arguments
         for(int i=4;i < args.length;i++) {
             Player player = new Player(args[i], i-3);
             allPlayers.add(player);
         }
+        // depending on game type determine all possible round combinations
         if (isSingleGame) {
             allPlayers.stream().forEach(currentPlayer -> {
                 List<Player> remainingPlayers = new ArrayList<>();
@@ -95,11 +105,32 @@ public class DynamicTrainingPlan {
                     }
                 });
             });
-        } else {
+        } else if (allPlayers.size() >= 4) {
             // check possible double game combinations here
-
+            allPlayers.stream().forEach(currentPlayer -> {
+                List<Player> remainingPlayers = new ArrayList<>();
+                allPlayers.stream().filter(filterPlayer -> !currentPlayer.equals(filterPlayer)).forEach(remainingPlayers::add);
+                if (remainingPlayers.size() == 3) {
+                    // get three of the remaining players, to get a valid double constellation
+                    Round currentRound = new Round();
+                    currentRound.getPlayers().add(currentPlayer);
+                    remainingPlayers.forEach(currentRound.getPlayers()::add);
+                    currentRound.sortPlayersInRoundByNumber();
+                    if (!currentRoundExistsInAllCombinations(currentRound, allCombinations)) {
+                        allCombinations.add(currentRound);
+                    }
+                } else {
+                    // always get 3 different players and build valid rounds for each combination
+                    addDoubleCombinationsForCurrentPlayer(currentPlayer, remainingPlayers, allCombinations);
+                }
+            });
         }
         return allCombinations;
+    }
+
+    private static void addDoubleCombinationsForCurrentPlayer(Player currentPlayer, List<Player> remainingPlayers, List<Round> allCombinations) {
+        // number of remaining players is > 3 => we have to check all possible combinations
+
     }
 
     private static boolean currentRoundExistsInAllCombinations(Round currentRoundSorted, List<Round> allCombinations) {
@@ -126,7 +157,16 @@ public class DynamicTrainingPlan {
                 writer.append(Integer.toString(roundNo));
                 writer.append(',');
                 // write player data in each line
-
+                Round currentRound = trainingsPlan.get(roundNo-1);
+                AtomicInteger playerCount = currentRound.validDoubleRound() ? new AtomicInteger(4) : new AtomicInteger(2);
+                currentRound.getPlayers().forEach(player -> {
+                    playerCount.getAndDecrement();
+                    try {
+                        writer.append(player.getName() + (playerCount.get() > 0 ? "," : ""));
+                    } catch(IOException ioInLambda) {
+                        ioInLambda.printStackTrace();
+                    }
+                });
                 // new line
                 writer.append('\n');
             }
