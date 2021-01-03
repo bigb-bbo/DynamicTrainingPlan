@@ -7,9 +7,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -47,7 +45,10 @@ public class DynamicTrainingPlan {
 
     private static List<Round> getOptimizedTrainingsPlan(List<Round> allCombinations, boolean isSingleGame, int noOfCourtsToFill, int noOfRoundsToPlay) {
         List<Round> finalTrainingsPlan = new ArrayList<>();
-
+        // initially simply use the created rounds as results
+        for(int roundNo=0;roundNo < noOfRoundsToPlay && allCombinations.get(roundNo) != null;roundNo++) {
+            finalTrainingsPlan.add(allCombinations.get(roundNo));
+        }
         return finalTrainingsPlan;
     }
 
@@ -129,8 +130,17 @@ public class DynamicTrainingPlan {
     }
 
     private static void addDoubleCombinationsForCurrentPlayer(Player currentPlayer, List<Player> remainingPlayers, List<Round> allCombinations) {
-        // number of remaining players is > 3 => we have to check all possible combinations
-
+        // get all possible 3-entries combinations of the remaining players
+        List<List<Player>> threePlayerCombos = getAllThreePlayerCombos(remainingPlayers);
+        threePlayerCombos.forEach(threePlayers -> {
+            Round currentRound = new Round();
+            currentRound.getPlayers().add(currentPlayer);
+            threePlayers.forEach(currentRound.getPlayers()::add);
+            currentRound.sortPlayersInRoundByNumber();
+            if (!currentRoundExistsInAllCombinations(currentRound, allCombinations)) {
+                allCombinations.add(currentRound);
+            }
+        });
     }
 
     private static boolean currentRoundExistsInAllCombinations(Round currentRoundSorted, List<Round> allCombinations) {
@@ -186,5 +196,36 @@ public class DynamicTrainingPlan {
 
     public void setTrainingsPlan(List<Round> trainingsPlan) {
         this.trainingsPlan = trainingsPlan;
+    }
+
+    private static List<List<Player>> getAllThreePlayerCombos(List<Player> remainingPlayers) {
+        List<List<Player>> allThreePlayerCombos = new ArrayList<>();
+        int player1Pos = 0, player2Pos = 1, player3Pos = 2;
+        // TODO - remainingPlayer.size() is still WRONG here
+        // 4 remaining players => 4 results (1*3 + 1) => 4
+        // 5 remaining players => 9 results (2*3 + 2) => 8
+        // 9 remaining players => 9 results (6*3 + 6) => 24
+        for(int listPos=0;listPos < remainingPlayers.size();listPos++) {
+            List<Player> threePlayerCombo = new ArrayList<>();
+            threePlayerCombo.add(remainingPlayers.get(player1Pos));
+            threePlayerCombo.add(remainingPlayers.get(player2Pos));
+            threePlayerCombo.add(remainingPlayers.get(player3Pos));
+            allThreePlayerCombos.add(new ArrayList<>());
+            allThreePlayerCombos.get(listPos).addAll(threePlayerCombo);
+            // reset the position values
+            boolean posChanged = false;
+            if (player3Pos < remainingPlayers.size()-1) {
+                player3Pos++;
+                posChanged = true;
+            }
+            if (!posChanged && player2Pos < (player3Pos-1)) {
+                player2Pos++;
+                posChanged = true;
+            }
+            if (!posChanged) {
+                player1Pos++;
+            }
+        }
+        return allThreePlayerCombos;
     }
 }

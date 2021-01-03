@@ -103,12 +103,30 @@ class DynamicTrainingPlanTest {
     }
 
     private void doDoubleGameTesting() {
-        // with less than 4 playes no round is possible
+        // with less than 4 players no round is possible
         String[] args = new String[] {"", "", "", "", "Player1", "Player2", "Player3"};
         assertEquals(0, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
         // 4 players should result in 1 possible combination
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4"};
         assertEquals(1, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        // 5 players should result in 5 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5"};
+        assertEquals(5, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        // 6 players should result in 9 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6"};
+        assertEquals(9, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        // 8 players should result in 22 possible combinations
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
+                "Player7", "Player8"};
+        assertEquals(22, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        // 10 players should result in 39 possible combinations => not CORRECT (as previous tests for doubles) => TODO
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
+                "Player7", "Player8", "Player9", "Player10"};
+        assertEquals(39, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        // 11 players should result in 49 possible combinations => not CORRECT (as previous tests for doubles) => TODO
+        args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
+                "Player7", "Player8", "Player9", "Player10", "Player11"};
+        assertEquals(49, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
     }
 
     @Test
