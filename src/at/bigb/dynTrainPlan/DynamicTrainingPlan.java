@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,7 +20,7 @@ public class DynamicTrainingPlan {
 
     /**
      * @param args
-     *   [0] "S"ingle or "D"ouble plan
+     *   [0] "S"single or "D"double plan
      *   [1] Number of courts to fill (only considered with single plans!)
      *   [2] Number of rounds to play
      *   [3] FULL fileName including directory
@@ -94,10 +95,10 @@ public class DynamicTrainingPlan {
         }
         // depending on game type determine all possible round combinations
         if (isSingleGame) {
-            allPlayers.stream().forEach(currentPlayer -> {
+            allPlayers.forEach(currentPlayer -> {
                 List<Player> remainingPlayers = new ArrayList<>();
                 allPlayers.stream().filter(filterPlayer -> !currentPlayer.equals(filterPlayer)).forEach(remainingPlayers::add);
-                remainingPlayers.stream().forEach(remainingPlayer -> {
+                remainingPlayers.forEach(remainingPlayer -> {
                     Round currentRound = new Round();
                     currentRound.setPlayers(Arrays.asList(currentPlayer, remainingPlayer));
                     currentRound.sortPlayersInRoundByNumber();
@@ -108,7 +109,7 @@ public class DynamicTrainingPlan {
             });
         } else if (allPlayers.size() >= 4) {
             // check possible double game combinations here
-            allPlayers.stream().forEach(currentPlayer -> {
+            allPlayers.forEach(currentPlayer -> {
                 List<Player> remainingPlayers = new ArrayList<>();
                 allPlayers.stream().filter(filterPlayer -> !currentPlayer.equals(filterPlayer)).forEach(remainingPlayers::add);
                 if (remainingPlayers.size() == 3) {
@@ -161,7 +162,7 @@ public class DynamicTrainingPlan {
     public static void buildAndWriteCsvFile(String fileName) {
         try {
             BufferedWriter writer = new BufferedWriter
-                    (new OutputStreamWriter(new FileOutputStream(fileName),"UTF-8"));
+                    (new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8));
             // loop over trainingPlan (and write line for each round)
             for(int roundNo = 1; roundNo <= trainingsPlan.size(); roundNo++) {
                 writer.append(Integer.toString(roundNo));
@@ -190,22 +191,15 @@ public class DynamicTrainingPlan {
         }
     }
 
-    public static List<Round> getTrainingsPlan() {
-        return trainingsPlan;
-    }
-
-    public void setTrainingsPlan(List<Round> trainingsPlan) {
-        this.trainingsPlan = trainingsPlan;
-    }
-
     private static List<List<Player>> getAllThreePlayerCombos(List<Player> remainingPlayers) {
         List<List<Player>> allThreePlayerCombos = new ArrayList<>();
         int player1Pos = 0, player2Pos = 1, player3Pos = 2;
         // TODO - remainingPlayer.size() is still WRONG here
-        // 4 remaining players => 4 results (1*3 + 1) => 4
-        // 5 remaining players => 9 results (2*3 + 2) => 8
-        // 9 remaining players => 9 results (6*3 + 6) => 24
-        for(int listPos=0;listPos < remainingPlayers.size();listPos++) {
+        // 4 remaining players => 4 results (1*4 + 0) => 4
+        // 5 remaining players => 10 results (2*5 + 0) => 10
+        // 6 remaining players => 20 results (3*6 + 2) => 20
+        int combosSize = (remainingPlayers.size()-3) * remainingPlayers.size();
+        for(int listPos=0;listPos < combosSize;listPos++) {
             List<Player> threePlayerCombo = new ArrayList<>();
             threePlayerCombo.add(remainingPlayers.get(player1Pos));
             threePlayerCombo.add(remainingPlayers.get(player2Pos));
@@ -224,8 +218,18 @@ public class DynamicTrainingPlan {
             }
             if (!posChanged) {
                 player1Pos++;
+                player2Pos = 2;
+                player3Pos = 3;
             }
         }
         return allThreePlayerCombos;
+    }
+
+    public static List<Round> getTrainingsPlan() {
+        return trainingsPlan;
+    }
+
+    public static void setTrainingsPlan(List<Round> trainingsPlan) {
+        DynamicTrainingPlan.trainingsPlan = trainingsPlan;
     }
 }
