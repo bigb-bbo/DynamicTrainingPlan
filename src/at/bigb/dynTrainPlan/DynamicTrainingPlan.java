@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * creates a dynamic training plan for single or double matches depending on start parameters
- * dummy commit to check 2-factor authentication
  */
 public class DynamicTrainingPlan {
 
