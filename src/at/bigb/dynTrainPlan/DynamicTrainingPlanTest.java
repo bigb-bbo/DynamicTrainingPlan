@@ -75,8 +75,9 @@ class DynamicTrainingPlanTest {
         assertTrue(trainingsPlan.getTrainingsPlan().size() == 26);
     }
 
+    @Test
     private void doSingleGameTesting() {
-        // create args (frist 4 values are not relevant)
+        // create args (first 4 values are no players and therefore not relevant)
         String[] args = new String[] {"", "", "", "", "Player1", "Player2"};
         // two players should result in 1 possible combination
         assertEquals(1, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
@@ -102,6 +103,7 @@ class DynamicTrainingPlanTest {
         assertEquals(45, trainingsPlan.createAllPossibleRoundCombinations(true, args).size());
     }
 
+    @Test
     private void doDoubleGameTesting() {
         // with less than 4 players no round is possible
         String[] args = new String[] {"", "", "", "", "Player1", "Player2", "Player3"};
@@ -114,23 +116,23 @@ class DynamicTrainingPlanTest {
         assertEquals(5, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
         // 6 players should result in 15 possible combinations => not CORRECT yet => TODO
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6"};
-        assertEquals(15, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        assertEquals(23, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
         // 7 players should result in 35 possible combinations => not CORRECT (as previous tests for doubles) => TODO
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
                 "Player7"};
-        assertEquals(35, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        assertEquals(48, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
         // 8 players should result in ? possible combinations => not CORRECT (as previous tests for doubles) => TODO
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
                 "Player7", "Player8"};
-        assertEquals(-1, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        assertEquals(89, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
         // 10 players should result in ? possible combinations => not CORRECT (as previous tests for doubles) => TODO
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
                 "Player7", "Player8", "Player9", "Player10"};
-        assertEquals(-1, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        assertEquals(213, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
         // 11 players should result in ? possible combinations => not CORRECT (as previous tests for doubles) => TODO
         args = new String[] {"", "", "", "", "Player1", "Player2", "Player3", "Player4", "Player5", "Player6",
                 "Player7", "Player8", "Player9", "Player10", "Player11"};
-        assertEquals(-1, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
+        assertEquals(298, trainingsPlan.createAllPossibleRoundCombinations(false, args).size());
     }
 
     @Test

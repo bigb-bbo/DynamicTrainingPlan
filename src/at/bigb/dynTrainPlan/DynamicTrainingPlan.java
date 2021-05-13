@@ -111,7 +111,8 @@ public class DynamicTrainingPlan {
             // check possible double game combinations here
             allPlayers.forEach(currentPlayer -> {
                 List<Player> remainingPlayers = new ArrayList<>();
-                allPlayers.stream().filter(filterPlayer -> !currentPlayer.equals(filterPlayer)).forEach(remainingPlayers::add);
+                allPlayers.stream().filter(filterPlayer -> !currentPlayer.equals(filterPlayer)).
+                        forEach(remainingPlayers::add);
                 if (remainingPlayers.size() == 3) {
                     // get three of the remaining players, to get a valid double constellation
                     Round currentRound = new Round();
