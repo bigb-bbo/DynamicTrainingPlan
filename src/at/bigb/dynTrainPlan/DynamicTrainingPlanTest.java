@@ -3,6 +3,7 @@ package at.bigb.dynTrainPlan;
 import at.bigb.dynTrainPlan.dao.Player;
 import at.bigb.dynTrainPlan.dao.Round;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,5 +141,21 @@ class DynamicTrainingPlanTest {
     void checkAllCombinationsCreated() {
         doSingleGameTesting();
         doDoubleGameTesting();
+    }
+
+    @Test
+    void doRangeTestForPlanOptimization() {
+        List<Round> entries = new ArrayList<>();
+        for(int i=0;i < 26;i++) {
+            Round round = new Round();
+            Player player1 = new Player("Player1", 1);
+            Player player2 = new Player("Player2", 2);
+            Player player3 = new Player("Player3", 3);
+            Player player4 = new Player("Player4", 4);
+            round.setPlayers(Arrays.asList(player1,player2,player3,player4));
+            entries.add(round);
+        }
+        assertEquals(20, trainingsPlan.getOptimizedTrainingsPlan(entries,false,
+                1,20).size());
     }
 }

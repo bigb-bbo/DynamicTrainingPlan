@@ -44,12 +44,10 @@ public class DynamicTrainingPlan {
         buildAndWriteCsvFile(fileName);
     }
 
-    private static List<Round> getOptimizedTrainingsPlan(List<Round> allCombinations, boolean isSingleGame, int noOfCourtsToFill, int noOfRoundsToPlay) {
+    public static List<Round> getOptimizedTrainingsPlan(List<Round> allCombinations, boolean isSingleGame, int noOfCourtsToFill, int noOfRoundsToPlay) {
         List<Round> finalTrainingsPlan = new ArrayList<>();
-        // initially simply use the created rounds as results
-        for(int roundNo=0;roundNo < noOfRoundsToPlay && allCombinations.get(roundNo) != null;roundNo++) {
-            finalTrainingsPlan.add(allCombinations.get(roundNo));
-        }
+        // initially simply use the created rounds limited to allowed number of rounds as results
+        allCombinations.stream().limit(noOfRoundsToPlay).forEach(finalTrainingsPlan::add);
         return finalTrainingsPlan;
     }
 
